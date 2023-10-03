@@ -1,0 +1,19 @@
+[
+    {
+        "id": 1,
+        "name": "Pomnik",
+        "description": "to je fajny pomnik takiego a takiego typa",
+        "localization": "ten fajny pomnik znajduje się tu i tu",
+        "image":"Ten pomnik wygląda tak i tak"
+    },
+    {
+        "id": 2,
+        "name": "Zajęcia w muzeum",
+        "description": "To będą fajne zajęcia w muzeum",
+        "localization": "W muzeum takim a takim",
+        "date": "12-10-2023",
+        "image":"Zdjęcie muzeum",
+        "ticket_price": "12 doge coinów"
+    }
+]
+
