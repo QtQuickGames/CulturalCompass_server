@@ -8,5 +8,4 @@ class Item(BaseModel):
     localization: str
     date: Optional[str] = Field(default=None)
     image: str
-    ticket_price: Optional[float] = Field(default=None
-                                          ) 
+    ticket_price: Optional[float] = Field(default=None) 
