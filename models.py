@@ -1,11 +1,26 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
-class Item(BaseModel):
-    id: Optional[int] = Field(default=None)
-    name: str
-    description: str
-    localization: str
-    date: Optional[str] = Field(default=None)
-    image: str
-    ticket_price: Optional[float] = Field(default=None) 
+class ItemPydanticModel(BaseModel):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nid_id: Optional[str] = Field(default = None)
+    identification: Optional[str] = Field(default = None)
+    common_name: Optional[str] = Field(default = None)
+    description: Optional[str] = Field(default = None)
+    state: Optional[str] = Field(default = None)
+    register_number: Optional[str] = Field(default = None)
+    dating_of_obj: Optional[str] = Field(default = None)
+    street: Optional[str] = Field(default = None)
+    latitude: Optional[float] = Field(default = None)
+    longitude: Optional[float] = Field(default = None)
+    country_code: Optional[str] = Field(default = None)
+    fprovince: Optional[str] = Field(default = None)
+    fplace: Optional[str] = Field(default = None)
+    documents_info: Optional[str]= Field(default = None)
+    links_info: Optional[str] = Field(default = None)
+    main_photo: Optional[str] = Field(default = None)
+    place_id: Optional[int] = Field(default = None)
+    place_name: Optional[str] = Field(default = None)
+    commune_name: Optional[str] = Field(default = None)
+    district_name: Optional[str] = Field(default = None)
+    voivodeship_name: Optional[str] = Field(default = None)

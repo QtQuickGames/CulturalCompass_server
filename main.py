@@ -2,8 +2,8 @@ from fastapi import FastAPI, Response, Depends
 import pathlib
 import json
 from typing import Union, List
-from models import Item
-from database import Item, engine
+from models import ItemPydanticModel
+from database import ItemSQLModel, engine
 from sqlmodel import Session, select
 
 
@@ -13,55 +13,46 @@ ITEMS_LIST = []
 
 @app.on_event("startup")
 async def startup_event():
-    #To są rzeczy do zainicjalizowania bazy danych gdybyśmy mieli plik typu json z opisem zabytków
-    datapath = pathlib.Path() / 'CulturalCompass_server'/ 'db.sqlite3'
-    #datapath = 'C:\Users\marcz\Desktop\Hackaton2023Plock\CulturalCompass_server\db.sqlite3'
-    #Start bazy danych
-    session = Session(engine)
-
-    #stmt - czyli statement - czyli zapytanie sqlowe
-    stmt = select(Item)
-    
-    #uruchomienie statementu na bazie
-    result = session.exec(stmt).first()
-
-    if result is None:
-        with open(datapath, 'r') as f:
-            items = json.load(f)
-            for item in items:
-                session.add(Item(**item))
-        session.commit()
-    session.close()
+    print("Jest fajnie może zadziałam")
 
 def get_session():
     with Session(engine) as session:
         yield session
 
-@app.get('/items/', response_model=List[Item])
+#Strona Powitalna
+@app.get('/')
+def hello_world():
+    return 'Witaj na stronie z zabytkami. Możesz sobie poklikać i bedzie wpyte.'
+
+#Wyplucie wszystkim rekordów z bazy
+@app.get('/items/', response_model=List[ItemPydanticModel])
 def get_items(session: Session = Depends(get_session)):
-    stmt = select(Item)
+    stmt = select(ItemSQLModel)
     result = session.exec(stmt).all()
     return result
 
-@app.get('/items/{item_id}', response_model=Union[Item, str])
+#Wydobycie jednego itemu z bazy
+@app.get('/items/{item_id}', response_model=Union[ItemPydanticModel, str])
 def get_item_by_id(item_id: int, respone: Response, session: Session = Depends(get_session)):
-    item = session.get(Item, item_id)
+    item = session.get(ItemSQLModel, item_id)
     if item is None:
         Response.status_code = 404
         return "Item not found"
     return item 
 
-
-@app.post('/items/', response_model=Item, status_code=201)
-def create_item(item: Item, session: Session = Depends(get_session)):
+#Dodaj nowy zabytek
+@app.post('/items/', response_model=ItemPydanticModel, status_code=201)
+def create_item(item: ItemSQLModel, session: Session = Depends(get_session)):
     session.add(item)
     session.commit()
     session.refresh(item)
     return item
 
-@app.put('/item/{item_id}', response_model=Union[Item, str])
-def update_item(item_id: int, updated_item: Item, respone: Response, session: Session = Depends(get_session) ):
-    item = session.get(Item, item_id)
+#Update zabytku
+@app.put('/item/{item_id}', response_model=Union[ItemPydanticModel, str])
+def update_item(item_id: int, updated_item: ItemPydanticModel, respone: Response, session: Session = Depends(get_session) ):
+    
+    item = session.get(ItemSQLModel, item_id)
 
     if item is None:
         Response.status_code = 404
@@ -75,11 +66,13 @@ def update_item(item_id: int, updated_item: Item, respone: Response, session: Se
     session.add(item)
     session.commit()
     session.refresh(item)
+
     return item 
 
+#Usuń zabytek
 @app.delete('/item/{item_id}')
 def delete_item(item_id: int, respone: Response, session: Session = Depends(get_session)):
-    item = session.get(Item, item_id)
+    item = session.get(ItemSQLModel, item_id)
 
     if item is None:
         Response.status_code = 404
@@ -87,5 +80,5 @@ def delete_item(item_id: int, respone: Response, session: Session = Depends(get_
 
     session.delete(item)
     session.commit()
-    return Response(status_code=200)
+    return Response(status_code=200 )
 

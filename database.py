@@ -4,7 +4,7 @@ from sqlalchemy import ARRAY, String, Column
 import json
 import os
 
-DATABASE = 'CulturalCompass_server/db.sqlite3'
+DATABASE = 'C:/Users/marcz/Desktop/Hackaton2023Plock/CulturalCompass_server/db.sqlite3'
 engine = create_engine(f'sqlite:///{DATABASE}', echo=True)
 
 session = Session(engine)
@@ -12,7 +12,7 @@ folder_path = 'C:\\Users\\marcz\\Desktop\\Hackaton2023Plock\\database\\relics-js
 
 'description', 'documents', 'date', 'fprovince', 'name', 'links', 'common_name', 'longitude', 'documents_info', 'identification', 'midi', 'latitude', 'alternate_text', 'categories', 'country_code', 'main_photo', 'photos', 'file', 'full', 'links_info', 'tags', 'file_full_width', 'street', 'descendants', 'district_name', 'url', 'events', 'author', 'entries', 'fplace', 'register_number', 'state', 'place_name', 'commune_name', 'alerts', 'body', 'mini', 'dating_of_obj', 'nid_id'
 
-class Item(SQLModel, table = True):
+class ItemSQLModel(SQLModel, table = True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nid_id: Optional[str] = Field(default = None)
     identification: Optional[str] = Field(default = None)
@@ -86,7 +86,7 @@ def import_data_from_json(json_file_path: str):
         #item_data["main_photo"] = main_photo
         # Utwórz obiekt ItemModel i dodaj go do bazy danych
 
-        item = Item(**item_data)
+        item = ItemSQLModel(**item_data)
         with Session(engine) as session:
             session.add(item)
             session.commit()
@@ -97,7 +97,7 @@ def update_all_items(json_file_path: str):
         data = json.load(file)
 
     with Session(engine) as session:
-        statement = select(Item)
+        statement = select(ItemSQLModel)
         results = session.exec(statement)
         items = results.all()
         for item in items:
