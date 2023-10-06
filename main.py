@@ -14,8 +14,8 @@ ITEMS_LIST = []
 @app.on_event("startup")
 async def startup_event():
     #To są rzeczy do zainicjalizowania bazy danych gdybyśmy mieli plik typu json z opisem zabytków
-    datapath = pathlib.Path() / 'data'/ 'zabytki.json'
-
+    datapath = pathlib.Path() / 'CulturalCompass_server'/ 'db.sqlite3'
+    #datapath = 'C:\Users\marcz\Desktop\Hackaton2023Plock\CulturalCompass_server\db.sqlite3'
     #Start bazy danych
     session = Session(engine)
 
